@@ -34,7 +34,7 @@ def upload_file():
         if file and allowed_file(file.filename):
             filename = str(uuid.uuid4()) + file_extension(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            return redirect(url_for('uploaded_file', filename=filename))
+            return redirect(url_for('file_metadata', filename=filename))
 
     return '''
     <!doctype html>

@@ -1,5 +1,5 @@
 import os
-from flask import Flask, flash, request, redirect, url_for, send_from_directory
+from flask import Flask, request, redirect, url_for, render_template
 import json
 import uuid
 from osgeo import gdal
@@ -15,9 +15,16 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
+def valid_gdal_file(filename):
+    dataset = gdal.Open(os.path.join(app.config['UPLOAD_FOLDER'], filename), gdal.GA_ReadOnly)
+    if type(dataset) is not gdal.Dataset:
+        return False
+    return True
+
+
 def file_extension(filename):
     if '.' in filename:
-        return '.' + filename.rsplit('.', 1)[1]
+        return '_' + filename.rsplit('.', 1)[1]
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -27,24 +34,25 @@ def upload_file():
         if 'file' not in request.files:
             return redirect(request.url)
         file = request.files['file']
+
         # if user does not select file, browser also
         # submit an empty part without filename
         if file.filename == '':
             return 'No selected file'
-        if file and allowed_file(file.filename):
-            filename = str(uuid.uuid4()) + file_extension(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            return redirect(url_for('file_metadata', filename=filename))
 
-    return '''
-    <!doctype html>
-    <title>Upload new File</title>
-    <h1>Upload new File</h1>
-    <form method=post enctype=multipart/form-data>
-      <input type=file name=file>
-      <input type=submit value=Upload>
-    </form>
-    '''
+        if not allowed_file(file.filename):
+            return 'Extension not allowed.'
+
+        filename = str(uuid.uuid4()) + file_extension(file.filename)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
+        if not valid_gdal_file(filename):
+            os.remove(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            return 'File is not a valid GDAL-File'
+
+        return redirect(url_for('file_metadata', filename=filename))
+
+    return render_template('upload.html')
 
 
 def get_metadata(filename):

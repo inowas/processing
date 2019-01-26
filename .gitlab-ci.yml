@@ -1,0 +1,20 @@
+stages:
+  - deploy
+
+services:
+  - docker:dind
+
+deploy:prod:
+  image: docker:latest
+  stage: deploy
+
+  before_script:
+   - docker info
+   - docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
+
+  script:
+    - docker build -t inowas/geoprocessing:latest .
+    - docker push inowas/geoprocessing
+
+  only:
+    - master

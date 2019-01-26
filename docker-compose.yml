@@ -17,8 +17,6 @@ services:
       - default
     volumes:
       - .:/app
-    ports:
-      - 5000:5000
 
 networks:
   web:

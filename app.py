@@ -1,5 +1,7 @@
 import os
 from flask import Flask, request, redirect, url_for, render_template
+from flask_cors import CORS
+
 import json
 import uuid
 from osgeo import gdal
@@ -9,6 +11,7 @@ UPLOAD_FOLDER = '/uploads'
 ALLOWED_EXTENSIONS = {'txt', 'png', 'jpg', 'jpeg', 'gif', 'tif', 'tiff', 'pdf'}
 
 app = Flask(__name__)
+CORS(app)
 
 
 def allowed_file(filename):

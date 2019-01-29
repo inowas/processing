@@ -15,6 +15,8 @@ services:
     networks:
       - web
       - default
+    volumes:
+      - .:/app
 
 networks:
   web:

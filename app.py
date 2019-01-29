@@ -54,7 +54,13 @@ def upload_file():
             os.remove(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             return 'File is not a valid GDAL-File'
 
-        return redirect(url_for('file_metadata', filename=filename))
+        return json.dumps({
+            'status': 200,
+            'hash': filename,
+            'get_metadata': '/' + filename,
+            'get_data': '/' + filename + '/data',
+            'get_scaled_data': '/' + filename + '/data/<width>/<height>'
+        })
 
     return render_template('upload.html')
 
@@ -102,14 +108,14 @@ def get_data(filename, width=False, height=False, method='wrap'):
     return data
 
 
-@app.route('/uploads/<filename>')
+@app.route('/<filename>')
 @cross_origin()
 def file_metadata(filename):
     return json.dumps(get_metadata(filename))
 
 
-@app.route('/uploads/<filename>/data')
-@app.route('/uploads/<filename>/data/<width>/<height>')
+@app.route('/<filename>/data')
+@app.route('/<filename>/data/<width>/<height>')
 @cross_origin()
 def file_data(filename, width=False, height=False):
     return json.dumps(get_data(filename, width, height))

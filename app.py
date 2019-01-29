@@ -1,6 +1,6 @@
 import os
 from flask import Flask, request, redirect, url_for, render_template
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 
 import json
 import uuid
@@ -31,6 +31,7 @@ def file_extension(filename):
 
 
 @app.route('/', methods=['GET', 'POST'])
+@cross_origin()
 def upload_file():
     if request.method == 'POST':
         # check if the post request has the file part
@@ -102,12 +103,14 @@ def get_data(filename, width=False, height=False, method='wrap'):
 
 
 @app.route('/uploads/<filename>')
+@cross_origin()
 def file_metadata(filename):
     return json.dumps(get_metadata(filename))
 
 
 @app.route('/uploads/<filename>/data')
 @app.route('/uploads/<filename>/data/<width>/<height>')
+@cross_origin()
 def file_data(filename, width=False, height=False):
     return json.dumps(get_data(filename, width, height))
 

@@ -119,7 +119,7 @@ def file_metadata(filename):
 @app.route('/<filename>/data/<width>/<height>/<method>')
 @cross_origin()
 def file_data(filename, width=False, height=False, method=1):
-    return json.dumps(get_data(filename, width, height, method))
+    return json.dumps(get_data(filename, width, height, int(method)))
 
 
 if __name__ == '__main__':

@@ -87,10 +87,10 @@ def get_metadata(filename):
 
 
 def interpolate(data2d, target_width, target_height, method):
-    return resize(data2d, (int(target_height), int(target_width)), mode=method, preserve_range=True)
+    return resize(data2d, (int(target_height), int(target_width)), order=method, mode='wrap', preserve_range=True)
 
 
-def get_data(filename, width=False, height=False, method='wrap'):
+def get_data(filename, width=False, height=False, method=1):
     dataset = gdal.Open(os.path.join(app.config['UPLOAD_FOLDER'], filename), gdal.GA_ReadOnly)
     if type(dataset) is not gdal.Dataset:
         return 'Invalid GDAL-FILE'
@@ -116,9 +116,10 @@ def file_metadata(filename):
 
 @app.route('/<filename>/data')
 @app.route('/<filename>/data/<width>/<height>')
+@app.route('/<filename>/data/<width>/<height>/<method>')
 @cross_origin()
-def file_data(filename, width=False, height=False):
-    return json.dumps(get_data(filename, width, height))
+def file_data(filename, width=False, height=False, method=1):
+    return json.dumps(get_data(filename, width, height, method))
 
 
 if __name__ == '__main__':

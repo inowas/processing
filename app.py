@@ -1,5 +1,5 @@
-import os
-from flask import Flask, request, redirect, url_for, render_template
+import os, time
+from flask import Flask, request, redirect, render_template
 from flask_cors import CORS, cross_origin
 
 import json
@@ -90,9 +90,18 @@ def interpolate(data2d, target_width, target_height, method):
     return resize(data2d, (int(target_height), int(target_width)), order=method, mode='wrap', preserve_range=True)
 
 
+# delete files older then 1 hour
+def cleanup():
+    now = time.time()
+    for f in os.listdir(app.config['UPLOAD_FOLDER']):
+        if os.stat(os.path.join(app.config['UPLOAD_FOLDER'], f)).st_mtime < now - 3600:
+            os.remove(os.path.join(app.config['UPLOAD_FOLDER'], f))
+
+
 def get_data(filename, width=False, height=False, method=1):
     dataset = gdal.Open(os.path.join(app.config['UPLOAD_FOLDER'], filename), gdal.GA_ReadOnly)
     if type(dataset) is not gdal.Dataset:
+        os.remove(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         return 'Invalid GDAL-FILE'
 
     data = []

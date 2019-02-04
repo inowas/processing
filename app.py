@@ -120,6 +120,7 @@ def get_data(filename, width=False, height=False, method=1):
 @app.route('/<filename>')
 @cross_origin()
 def file_metadata(filename):
+    cleanup()
     return json.dumps(get_metadata(filename))
 
 

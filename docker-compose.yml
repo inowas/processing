@@ -5,7 +5,7 @@ services:
     image: inowas/geoprocessing:latest
     restart: always
     expose:
-    - 5000
+      - 5000
     labels:
       - "traefik.docker.network=${TRAEFIK_NETWORK_NAME}"
       - "traefik.enable=true"
@@ -14,11 +14,22 @@ services:
       - "traefik.wiki.protocol=http"
     networks:
       - web
-      - default
     volumes:
       - .:/app
 
+  traefik:
+    image: traefik
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - web
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./traefik/acme.json:/acme.json
+      - ./traefik/traefik.toml:/traefik.toml
+      - ./traefik/logs:/logs
+
 networks:
   web:
-    external:
-      name: ${TRAEFIK_NETWORK_NAME}

@@ -1,5 +1,6 @@
 Flask==1.0.2
 Flask-Cors==3.0.7
-numpy
+numpy==1.16.0
 pika==0.13.0
-scikit-image
+python-dotenv==0.10.3
+scikit-image==0.14.2

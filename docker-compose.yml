@@ -17,6 +17,8 @@ services:
       - default
     volumes:
       - .:/app
+    environment:
+      UPLOAD_FOLDER: '/uploads'
 
 networks:
   web:

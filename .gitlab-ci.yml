@@ -13,8 +13,8 @@ deploy:prod:
    - docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
 
   script:
-    - docker build -t inowas/geoprocessing:latest .
-    - docker push inowas/geoprocessing
+    - docker build -t inowas/processing:latest .
+    - docker push inowas/processing
 
   only:
     - master

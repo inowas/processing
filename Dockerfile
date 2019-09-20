@@ -20,11 +20,12 @@ RUN echo 'alias pip=pip3' >> ~/.bashrc
 ENV CPLUS_INCLUDE_PATH=/usr/include/gdal
 ENV C_INCLUDE_PATH=/usr/include/gdal
 
-COPY ./requirements.txt /requirements.txt
+COPY . /app
+
 WORKDIR /app
 
 # Before installing GDAL we need to install the requirements
-RUN pip3 install -r /requirements.txt
+RUN pip3 install -r requirements.txt
 
 # This will install latest version of GDAL
 RUN pip3 install GDAL==$(gdal-config --version) --global-option=build_ext --global-option="-I/usr/include/gdal"

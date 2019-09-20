@@ -3,7 +3,7 @@ stages:
   - deploy
 
 services:
-  - docker:dind
+  - gitlab:dind
 
 test:
   stage: test

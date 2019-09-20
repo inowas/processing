@@ -7,11 +7,14 @@ services:
 
 test:
   stage: test
-  script:
-    - apt-get update -qy
-    - apt-get install -y python-dev python-pip
+  image: python:3.7
+
+  before_script:
+    - python --version
     - pip install -r requirements.txt
-    - python -m pytest
+
+  script:
+    - pytest
 
 production:
   stage: deploy

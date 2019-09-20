@@ -19,7 +19,13 @@ ALLOWED_EXTENSIONS = {'txt', 'png', 'jpg', 'jpeg', 'gif', 'tif', 'tiff', 'pdf'}
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 
-rasters = Blueprint('rasters', __name__, url_prefix='/rasters', template_folder='templates', static_folder='static')
+rasters = Blueprint(
+    'rasters',
+    __name__,
+    url_prefix='/rasters',
+    template_folder='templates',
+    static_folder='../static'
+)
 
 
 def allowed_file(filename):

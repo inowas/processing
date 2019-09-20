@@ -2,25 +2,34 @@ import pandas as pd
 
 
 def parse_input(d):
-    df = pd.read_json(d)
+    try:
+        df = pd.read_json(d)
+    except Exception:
+        raise ValueError('Error parsing JSON.')
+
     if 'timeStamp' in df.columns:
         return df.set_index('timeStamp')
 
-    return False
+    if 'date_time' in df.columns:
+        return df.set_index('date_time')
+
+    raise ValueError('Error in data structure.')
 
 
 def resample(df, rule, interpolation_method, to_json=True):
     """
     :param to_json:
-    :param df: Pandas dataframe with time-based index
+    :param df: Pandas data frame with time-based index
     :param rule: pandas resample rule
     :param interpolation_method:
     """
 
-    if not isinstance(df, pd.DataFrame):
-        return False
+    assert isinstance(df, pd.DataFrame)
 
-    df = df.resample(rule).interpolate(method=interpolation_method).reset_index(level=0)
+    try:
+        df = df.resample(rule).interpolate(method=interpolation_method).reset_index(level=0)
+    except Exception as e:
+        raise e
 
     if to_json:
         return df.to_json(orient='records', date_unit='s')

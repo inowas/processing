@@ -16,7 +16,11 @@ def resample_request():
     rule = request.args.get('rule', default='1D')
     interpolation_method = request.args.get('interpolation_method', 'linear')
 
-    data = parse_input(json.dumps(request.json))
+    data = None
+    try:
+        data = parse_input(json.dumps(request.json))
+    except ValueError as e:
+        abort(422, str(e))
 
     try:
         data = resample(data, rule=rule, interpolation_method=interpolation_method, to_json=True)

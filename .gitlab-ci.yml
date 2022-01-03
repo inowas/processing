@@ -7,7 +7,7 @@ services:
 
 test:
   stage: test
-  image: python:3.7
+  image: python:3.8
 
   before_script:
     - python --version

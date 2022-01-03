@@ -1,7 +1,7 @@
 import json
 import pytest
 import pandas as pd
-from pandas.util.testing import assert_frame_equal
+from pandas.testing import assert_frame_equal
 
 from timeseries.resample import parse_input, resample
 
@@ -57,6 +57,27 @@ def test_resample_to_json():
         {'timeStamp': 1567814400, 'value': 0.515862069}, {'timeStamp': 1567900800, 'value': 0.515862069},
         {'timeStamp': 1567987200, 'value': 0.5172413793}, {'timeStamp': 1568073600, 'value': 0.5489655172},
         {'timeStamp': 1568160000, 'value': 0.5434482759}
+    ])
+
+    assert json.loads(calculated) == json.loads(expected)
+
+
+def test_resample_aggregate_to_json():
+    raw = parse_input(read_file('tests/timeseries/data_hourly.json'))
+    calculated = resample(raw, '1D', 'linear', to_json=True, aggregate=True)
+    print(calculated)
+    expected = json.dumps([
+        {"timeStamp": 1567296000, "value": 12.532022601},
+        {"timeStamp": 1567382400, "value": 12.4316722606},
+        {"timeStamp": 1567468800, "value": 12.9911748878},
+        {"timeStamp": 1567555200, "value": 12.5759403744},
+        {"timeStamp": 1567641600, "value": 12.4587403577},
+        {"timeStamp": 1567728000, "value": 12.4068965523},
+        {"timeStamp": 1567814400, "value": 12.4331034486},
+        {"timeStamp": 1567900800, "value": 13.473698464},
+        {"timeStamp": 1567987200, "value": 14.8394498803},
+        {"timeStamp": 1568073600, "value": 14.1626126616},
+        {"timeStamp": 1568160000, "value": 5.8065835718}
     ])
 
     assert json.loads(calculated) == json.loads(expected)

@@ -6,8 +6,8 @@ Webservice providing raster-file and time-series processing
 
 * https://\<url>/rasters/
 
-You can upload a a valid [gdal-raster-file](https://gdal.org/drivers/raster/index.html) over the web-frontend 
-or a POST-request.
+You can upload a a valid [gdal-raster-file](https://gdal.org/drivers/raster/index.html) over the web-frontend or a
+POST-request.
 
 Uploading a valid file will generate the following answer-structure:
 
@@ -46,7 +46,8 @@ To retrieve the scaled data with an optional interpolation method:
 
 * https://\<url>/rasters/\<get_metadata_id>/data/\<width>/\<height>/\<method>
 
-With the following Interpolation Methods from [skimage.transform.warp](https://scikit-image.org/docs/dev/api/skimage.transform.html#skimage.transform.warp):
+With the following Interpolation Methods
+from [skimage.transform.warp](https://scikit-image.org/docs/dev/api/skimage.transform.html#skimage.transform.warp):
 
 ```
     0: Nearest-neighbor  
@@ -56,17 +57,18 @@ With the following Interpolation Methods from [skimage.transform.warp](https://s
     4: Bi-quartic  
     5: Bi-quintic
 ```  
- 
 
 ## Time series processing
 
-Time series processing implements the [pandas.DataFrame.resample](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.resample.html) function.
+Time series processing implements
+the [pandas.DataFrame.resample](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.resample.html)
+function.
 
 You can send a POST-request to:
 
-* https://\<url>/timeseries/resample?rule=\<rule>&interpolation_method=\<interpolation_method>
+* https://\<url>/timeseries/resample?rule=\<rule>&interpolation_method=\<interpolation_method>&aggregate=\<aggregate>
 
-Data structure: 
+Data structure:
 
 ```
 [
@@ -81,9 +83,6 @@ Parameters:
 
 ```
     rule: p.e. 1d, 1w, 1y, 2w, 2d 
-
     interpolation method: p.e. time, cubic, etc.
-``` 
-
-
-
+    aggregate: true, false
+```

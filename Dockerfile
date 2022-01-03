@@ -1,12 +1,15 @@
 #### Use latest Ubuntu LTS release as the base
-FROM ubuntu:bionic
+FROM ubuntu:focal
 
 # Update base container install
 RUN apt-get update
 RUN apt-get upgrade -y
 
 # Install GDAL dependencies
-RUN apt-get install -y python3-pip libgdal-dev locales netcat
+
+ENV TZ=Europe/Berlin
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+RUN apt install -y python3-pip libgdal-dev locales netcat libfreetype6-dev
 
 # Ensure locales configured correctly
 RUN locale-gen en_US.UTF-8

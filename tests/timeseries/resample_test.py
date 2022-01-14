@@ -65,7 +65,6 @@ def test_resample_to_json():
 def test_resample_aggregate_to_json():
     raw = parse_input(read_file('tests/timeseries/data_hourly.json'))
     calculated = resample(raw, '1D', 'linear', to_json=True, aggregate=True)
-    print(calculated)
     expected = json.dumps([
         {"timeStamp": 1567296000, "value": 12.532022601},
         {"timeStamp": 1567382400, "value": 12.4316722606},

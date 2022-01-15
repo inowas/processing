@@ -88,12 +88,13 @@ def contour_3d():
         except ValueError as e:
             abort(422, str(e))
 
-        data[data == -1] = None
-
         x_min = float(request.args.get('xmin', default=0))
         x_max = float(request.args.get('xmax', default=np.shape(data)[0]))
         y_min = float(request.args.get('ymin', default=0))
         y_max = float(request.args.get('ymax', default=np.shape(data)[1]))
+        z_min = np.amin(data)
+        z_max = np.partition(np.unique(data.flatten().round(decimals=10)), -1)[-2]
+        c_levels = int(request.args.get('clevels', 10))
         c_map = get_cmap(request.args.get('cmap', 'Greens'))
         c_label = request.args.get('clabel', '')
         x_label = request.args.get('xlabel', '')
@@ -108,7 +109,8 @@ def contour_3d():
         fig = get_figure_for_target(target)
 
         axes = plt.axes(projection='3d')
-        plot_surface = axes.plot_surface(X, Y, data, cmap=c_map, vmin=0, vmax=100)
+        levels = np.linspace(z_min, z_max, c_levels)
+        plot_surface = axes.plot_surface(X, Y, data, cmap=c_map, vmin=z_min, vmax=z_max)
         color_bar = fig.colorbar(plot_surface, shrink=0.5, aspect=30, location='bottom', pad=0.05, anchor=(0.5, 0.5))
 
         # Font size for color bar

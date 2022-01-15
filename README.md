@@ -117,6 +117,9 @@ Parameters:
     clevels: number of contours shown, default 10
     cmap: contour map string, default: Greens
     clabel: contour label, default: ""
+    xlabel: x-axis label, default: ""
+    ylabel: y-axis label, default: ""
+    zlabel: z-axis label, default: ""
     target: the target size/format, default: web
 ```
 

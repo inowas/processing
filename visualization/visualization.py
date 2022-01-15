@@ -42,6 +42,8 @@ def contour():
         c_levels = int(request.args.get('clevels', 10))
         c_map = get_cmap(request.args.get('cmap', 'Greens'))
         c_label = request.args.get('clabel', '')
+        x_label = request.args.get('xlabel', '')
+        y_label = request.args.get('ylabel', '')
         target = request.args.get('target', 'web')
 
         x_axis = np.linspace(x_max, x_min, num=np.shape(data)[0])
@@ -53,6 +55,8 @@ def contour():
         axis.plot()
         levels = np.linspace(z_min, z_max, c_levels)
         plt.contourf(X, Y, data, levels=levels, cmap=c_map)
+        plt.xlabel(x_label)
+        plt.ylabel(y_label)
 
         if x_max < x_min:
             plt.gca().invert_xaxis()
@@ -61,6 +65,71 @@ def contour():
             plt.gca().invert_yaxis()
         clb = plt.colorbar(ticks=levels)
         clb.set_label(label=c_label, rotation=90, labelpad=0)
+
+        output = io.BytesIO()
+        FigureCanvas(fig).print_png(output)
+        return Response(output.getvalue(), mimetype='image/png')
+
+
+@visualization.route('/contour3d', methods=['POST', 'GET'])
+@cross_origin()
+def contour_3d():
+    if request.method == 'GET':
+        return "contour3d"
+
+    if request.method == 'POST':
+        if request.content_type != 'application/json':
+            abort(422, 'The content type is expected to be "application/json".')
+
+        data = None
+
+        try:
+            data = np.asarray(request.json)
+        except ValueError as e:
+            abort(422, str(e))
+
+        x_min = float(request.args.get('xmin', default=0))
+        x_max = float(request.args.get('xmax', default=np.shape(data)[0]))
+        y_min = float(request.args.get('ymin', default=0))
+        y_max = float(request.args.get('ymax', default=np.shape(data)[1]))
+        z_min = np.amin(data)
+        z_max = np.partition(np.unique(data.flatten().round(decimals=10)), -1)[-2]
+        c_levels = int(request.args.get('clevels', 10))
+        c_map = get_cmap(request.args.get('cmap', 'Greens'))
+        c_label = request.args.get('clabel', '')
+        x_label = request.args.get('xlabel', '')
+        y_label = request.args.get('ylabel', '')
+        z_label = request.args.get('zlabel', '')
+        target = request.args.get('target', 'web')
+
+        x_axis = np.linspace(x_max, x_min, num=np.shape(data)[0])
+        y_axis = np.linspace(y_max, y_min, num=np.shape(data)[1])
+        X, Y = np.meshgrid(x_axis, y_axis)
+
+        fig = get_figure_for_target(target)
+
+        axes = plt.axes(projection='3d')
+        levels = np.linspace(z_min, z_max, c_levels)
+        plot_surface = axes.plot_surface(X, Y, data, cmap=c_map, vmin=z_min, vmax=z_max)
+        color_bar = fig.colorbar(plot_surface, shrink=0.5, aspect=30, location='bottom', pad=0.05, anchor=(0.5, 0.5))
+
+        # Font size for color bar
+        color_bar.ax.tick_params(labelsize=5)
+
+        color_bar.set_label(c_label, size=7)
+        axes.set_xlabel(x_label, size=7)
+        axes.set_ylabel(y_label, size=7)
+        axes.set_zlabel(z_label, size=7)
+
+        # Font size for x y z axes
+        axes.tick_params(axis='both', which='major', labelsize=5)
+        axes.tick_params(axis='both', which='minor', labelsize=5)
+
+        if x_max < x_min:
+            plt.gca().invert_xaxis()
+
+        if y_max > y_min:
+            plt.gca().invert_yaxis()
 
         output = io.BytesIO()
         FigureCanvas(fig).print_png(output)

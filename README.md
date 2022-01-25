@@ -107,6 +107,12 @@ The data structure must be a 2D array:
 ]
 ```
 
+It redirects to a GET request with a hash to the image:
+
+* https://\<url>/visualization/contour/<hash>
+
+where the following get Parameters can be applied:
+
 Parameters:
 
 ```
@@ -150,7 +156,7 @@ Parameters:
 #### CURL Example for contour
 
 ```shell
-curl --location --request POST 'https://<url>/visualization/contour?xmin=100&xmax=200&ymin=100&ymax=200&clevels=4&cmap=Spectral&target=web&clabel=test' \
+curl --location --request POST 'https://<url>/visualization/contour' \
 --header 'Content-Type: application/json' \
 --data-raw '[
     [1, 2, 3],
@@ -158,6 +164,32 @@ curl --location --request POST 'https://<url>/visualization/contour?xmin=100&xma
     [7, 8, 9]
 ]'
 
+curl --location --request GET 'https://<url>/visualization/contour/42ecb143078b0fd8ca03fe38d29ed617?xmin=100&xmax=200&ymin=100&ymax=200&clevels=4&cmap=Spectral&target=web&clabel=test' \
+--header 'Content-Type: application/json' \
+--data-raw '[
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 9]
+]'
+```
 
+#### CURL Example for contour3d
+
+```shell
+curl --location --request POST 'https://<url>/visualization/contour3d' \
+--header 'Content-Type: application/json' \
+--data-raw '[
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 9]
+]'
+
+curl --location --request GET 'https://<url>/visualization/contour3d/42ecb143078b0fd8ca03fe38d29ed617?xmin=100&xmax=200&ymin=100&ymax=200&clevels=4&cmap=Spectral&target=web&clabel=test' \
+--header 'Content-Type: application/json' \
+--data-raw '[
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 9]
+]'
 ```
 

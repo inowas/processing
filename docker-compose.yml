@@ -17,6 +17,7 @@ services:
       - default
     environment:
       UPLOAD_FOLDER: '/uploads'
+      FLASK_ENV: 'production'
 
 networks:
   web:

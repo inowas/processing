@@ -2,7 +2,7 @@ import hashlib
 import io
 import json
 import os
-from flask import abort, Blueprint, request, Response, redirect
+from flask import abort, Blueprint, request, Response, redirect, url_for, app
 from flask_cors import cross_origin
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 import numpy as np
@@ -41,7 +41,7 @@ def post_contour():
         with open(filepath, 'w') as outfile:
             json.dump(data.tolist(), outfile)
 
-    return redirect('contour/' + hash)
+    return redirect(url_for('visualization.get_contour', hash=hash, _scheme=get_scheme(), _external=True))
 
 
 @visualization.route('/contour/<hash>', methods=['GET'])
@@ -119,7 +119,7 @@ def post_contour_3d():
         with open(filepath, 'w') as outfile:
             json.dump(data.tolist(), outfile)
 
-    return redirect('contour3d/' + hash)
+    return redirect(url_for('visualization.get_contour_3d', hash=hash, _scheme=get_scheme(), _external=True))
 
 
 @visualization.route('/contour3d/<hash>', methods=['GET'])
@@ -221,3 +221,10 @@ def read_json(file):
     with open(file) as file_data:
         data = json.loads(file_data.read())
     return data
+
+
+def get_scheme():
+    if app.get_env() == 'production':
+        return 'https'
+
+    return 'http'

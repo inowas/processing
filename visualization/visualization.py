@@ -72,6 +72,8 @@ def get_contour(hash):
     y_label = request.args.get('ylabel', '')
     target = request.args.get('target', 'web')
 
+    test = 5
+
     x_axis = np.linspace(x_max, x_min, num=np.shape(data)[0])
     y_axis = np.linspace(y_max, y_min, num=np.shape(data)[1])
     X, Y = np.meshgrid(x_axis, y_axis)

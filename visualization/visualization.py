@@ -77,6 +77,7 @@ def get_contour(hash):
     X, Y = np.meshgrid(x_axis, y_axis)
 
     test = 6
+    test_2 = 5
 
     fig = get_figure_for_target(target)
     axis = fig.add_subplot(1, 1, 1)
